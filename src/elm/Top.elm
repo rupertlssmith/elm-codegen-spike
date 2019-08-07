@@ -61,7 +61,9 @@ type Msg
 
 
 init _ =
-    ( Initial, Task.perform CreateSeed Time.now )
+    ( Initial
+    , Task.perform CreateSeed Time.now
+    )
 
 
 
@@ -74,7 +76,7 @@ update msg model =
             ( Seeded { seed = Random.initialSeed <| Time.posixToMillis posix }, Cmd.none )
 
         ( Seeded { seed }, ModelData val ) ->
-            ( LoadedModel { seed = seed, dataModel = val }, Cmd.none )
+            ( LoadedModel { seed = seed, dataModel = val }, codeOutPort "code" )
 
         ( _, _ ) ->
             ( model, Cmd.none )

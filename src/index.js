@@ -7,42 +7,11 @@ const {
 
 const app = Elm.Top.init();
 
-fs.readFile('data/cust.csv', 'utf8', function(err, contents) {
-  app.ports.custDataPort.send(contents);
-});
+app.ports.modelInPort.send("model");
 
-fs.readFile('data/acc.csv', 'utf8', function(err, contents) {
-  app.ports.accDataPort.send(contents);
-});
-
-fs.readFile('data/txn.csv', 'utf8', function(err, contents) {
-  app.ports.txnDataPort.send(contents);
-});
-
-app.ports.userFilePort.subscribe(request => {
+app.ports.codeOutPort.subscribe(request => {
   console.log(request);
-  fs.writeFile('users.json', request, (err) => {
-    if (err) throw err;
-  })
-});
-
-app.ports.accountFilePort.subscribe(request => {
-  console.log(request);
-  fs.writeFile('accounts.json', request, (err) => {
-    if (err) throw err;
-  })
-});
-
-app.ports.txFilePort.subscribe(request => {
-  console.log(request);
-  fs.writeFile('batch.json', request, (err) => {
-    if (err) throw err;
-  })
-});
-
-app.ports.userIdsFilePort.subscribe(request => {
-  console.log(request);
-  fs.writeFile('cins.txt', request, (err) => {
+  fs.writeFile('example.txt', request, (err) => {
     if (err) throw err;
   })
 });
