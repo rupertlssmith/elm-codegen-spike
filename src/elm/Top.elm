@@ -1,5 +1,6 @@
 port module Top exposing (main)
 
+import AST
 import Dict exposing (Dict)
 import Random exposing (Seed)
 import Task
