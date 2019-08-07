@@ -44,6 +44,9 @@ type Model
     = Initial
     | Seeded { seed : Seed }
     | LoadedModel { seed : Seed, dataModel : String }
+    | ModelProcessed
+    | TemplateProcessed
+    | Done
     | Error String
 
 
