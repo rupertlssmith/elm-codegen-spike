@@ -27,7 +27,26 @@ prettyToList _ =
 
 example : Int -> Seed -> ( AST, Seed )
 example count seed =
-    ( [ Statement [ "one", "two", "three" ] ], seed )
+    let
+        exampleInner innerCount innerSeed =
+            case innerCount of
+                0 ->
+                    exampleBlock innerSeed
+                        |> Tuple.mapFirst List.singleton
+
+                c ->
+                    exampleBlock innerSeed
+                        |> Tuple.mapFirst List.singleton
+
+        ( blocks, newSeed ) =
+            exampleInner count seed
+    in
+    ( blocks, newSeed )
+
+
+exampleBlock : Seed -> ( Block, Seed )
+exampleBlock seed =
+    ( Statement [ "one", "two", "three" ], seed )
 
 
 prettyAst : AST -> Doc
