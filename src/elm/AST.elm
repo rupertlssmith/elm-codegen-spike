@@ -1,6 +1,7 @@
 module AST exposing (AST, Block(..), example, pretty, prettyToList)
 
 import Pretty exposing (Doc)
+import Random exposing (Seed)
 
 
 type alias AST =
@@ -24,9 +25,9 @@ prettyToList _ =
     [ "prettyToList" ]
 
 
-example : Int -> AST
-example _ =
-    [ Statement [ "one", "two", "three" ] ]
+example : Int -> Seed -> ( AST, Seed )
+example count seed =
+    ( [ Statement [ "one", "two", "three" ] ], seed )
 
 
 prettyAst : AST -> Doc
