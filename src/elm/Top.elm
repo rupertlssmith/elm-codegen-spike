@@ -66,10 +66,6 @@ init _ =
     )
 
 
-
---Time.now )
-
-
 update msg model =
     case ( model, msg ) of
         ( Initial, CreateSeed posix ) ->
