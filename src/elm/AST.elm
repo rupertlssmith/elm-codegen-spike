@@ -16,7 +16,7 @@ type Block
 pretty : AST -> String
 pretty ast =
     prettyAst ast
-        |> Pretty.pretty 4
+        |> Pretty.pretty 120
 
 
 prettyToList : AST -> List String
@@ -40,10 +40,11 @@ prettyBlock block =
     case block of
         Statement expr ->
             List.map Pretty.string expr
-                |> Pretty.lines
+                |> Pretty.softlines
 
         Blocks blocks ->
             prettyAst blocks
 
         SubBlock subBlock ->
             prettyBlock subBlock
+                |> Pretty.hang 4
