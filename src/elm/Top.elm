@@ -1,6 +1,6 @@
 port module Top exposing (main)
 
-import AST
+import AST exposing (AST, Block(..))
 import Dict exposing (Dict)
 import Random exposing (Seed)
 import Task
@@ -44,7 +44,7 @@ subscriptions model =
 type Model
     = Initial
     | Seeded { seed : Seed }
-    | LoadedModel { seed : Seed, dataModel : String }
+    | LoadedModel { seed : Seed, dataModel : AST }
     | ModelProcessed
     | TemplateProcessed
     | Done
@@ -76,7 +76,13 @@ update msg model =
             ( Seeded { seed = Random.initialSeed <| Time.posixToMillis posix }, Cmd.none )
 
         ( Seeded { seed }, ModelData val ) ->
-            ( LoadedModel { seed = seed, dataModel = val }, codeOutPort "code" )
+            let
+                example =
+                    AST.example 0
+            in
+            ( LoadedModel { seed = seed, dataModel = example }
+            , AST.pretty example |> codeOutPort
+            )
 
         ( _, _ ) ->
             ( model, Cmd.none )

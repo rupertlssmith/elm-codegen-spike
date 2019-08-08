@@ -1,6 +1,6 @@
 module AST exposing (AST, Block(..), example, pretty, prettyToList)
 
-import Pretty
+import Pretty exposing (Doc)
 
 
 type alias AST =
@@ -14,8 +14,9 @@ type Block
 
 
 pretty : AST -> String
-pretty _ =
-    "pretty"
+pretty ast =
+    prettyAst ast
+        |> Pretty.pretty 4
 
 
 prettyToList : AST -> List String
@@ -25,4 +26,24 @@ prettyToList _ =
 
 example : Int -> AST
 example _ =
-    []
+    [ Statement [ "one", "two", "three" ] ]
+
+
+prettyAst : AST -> Doc
+prettyAst ast =
+    List.map prettyBlock ast
+        |> Pretty.lines
+
+
+prettyBlock : Block -> Doc
+prettyBlock block =
+    case block of
+        Statement expr ->
+            List.map Pretty.string expr
+                |> Pretty.lines
+
+        Blocks blocks ->
+            prettyAst blocks
+
+        SubBlock subBlock ->
+            prettyBlock subBlock
