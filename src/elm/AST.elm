@@ -62,13 +62,10 @@ exampleBlock seed =
             exampleStatement seed2
 
         2 ->
-            exampleBlock seed2
-                |> Tuple.mapFirst List.singleton
-                |> Tuple.mapFirst Blocks
+            Tuple.mapFirst Blocks (Tuple.mapFirst List.singleton (exampleStatement seed2))
 
         _ ->
-            exampleBlock seed2
-                |> Tuple.mapFirst SubBlock
+            Tuple.mapFirst SubBlock (exampleStatement seed2)
 
 
 exampleStatement : Seed -> ( Block, Seed )
