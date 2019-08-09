@@ -18,7 +18,7 @@ type Block
 pretty : AST -> String
 pretty ast =
     prettyAst ast
-        |> Pretty.pretty 120
+        |> Pretty.pretty 40
 
 
 prettyToList : AST -> List String
