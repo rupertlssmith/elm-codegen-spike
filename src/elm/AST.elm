@@ -1,5 +1,6 @@
 module AST exposing (AST, Block(..), example, pretty, prettyToList)
 
+import Array exposing (Array)
 import Pretty exposing (Doc)
 import Random exposing (Seed)
 
@@ -52,7 +53,45 @@ example count seed =
 
 exampleBlock : Seed -> ( Block, Seed )
 exampleBlock seed =
-    ( Statement [ "one", "two", "three" ], seed )
+    let
+        ( choice, seed2 ) =
+            Random.step (Random.uniform 1 [ 2, 3 ]) seed
+    in
+    case choice of
+        1 ->
+            exampleStatement seed2
+
+        2 ->
+            exampleBlock seed2
+                |> Tuple.mapFirst List.singleton
+                |> Tuple.mapFirst Blocks
+
+        _ ->
+            exampleBlock seed2
+                |> Tuple.mapFirst SubBlock
+
+
+exampleStatement : Seed -> ( Block, Seed )
+exampleStatement seed =
+    let
+        ( count, seed2 ) =
+            Random.step (Random.int 3 12) seed
+
+        ( wordList, seed3 ) =
+            Random.step
+                (Random.int 0 (Array.length words)
+                    |> Random.map (\index -> Array.get index words |> Maybe.withDefault "default")
+                    |> Random.list count
+                )
+                seed2
+    in
+    ( Statement wordList, seed3 )
+
+
+words : Array String
+words =
+    [ "if", "then", "array", "let", "in", "begin", "end", "case", "where", "sum", "prod", "list", "cons" ]
+        |> Array.fromList
 
 
 prettyAst : AST -> Doc
@@ -69,8 +108,12 @@ prettyBlock block =
                 |> Pretty.softlines
 
         Blocks blocks ->
-            prettyAst blocks
+            Pretty.string "{"
+                |> Pretty.a Pretty.line
+                |> Pretty.a (prettyAst blocks |> Pretty.indent 4)
+                |> Pretty.a Pretty.line
+                |> Pretty.a (Pretty.string "}")
 
         SubBlock subBlock ->
             prettyBlock subBlock
-                |> Pretty.hang 4
+                |> Pretty.indent 4
