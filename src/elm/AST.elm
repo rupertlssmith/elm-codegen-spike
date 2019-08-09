@@ -28,20 +28,26 @@ prettyToList _ =
 example : Int -> Seed -> ( AST, Seed )
 example count seed =
     let
+        exampleInner : Int -> Seed -> ( AST, Seed )
         exampleInner innerCount innerSeed =
             case innerCount of
                 0 ->
-                    exampleBlock innerSeed
-                        |> Tuple.mapFirst List.singleton
+                    ( [], innerSeed )
 
                 c ->
-                    exampleBlock innerSeed
-                        |> Tuple.mapFirst List.singleton
+                    let
+                        ( bl, innerSeed2 ) =
+                            exampleBlock innerSeed
 
-        ( blocks, newSeed ) =
+                        ( e, innerSeed3 ) =
+                            exampleInner (innerCount - 1) innerSeed2
+                    in
+                    ( bl :: e, innerSeed3 )
+
+        ( blocks, seed2 ) =
             exampleInner count seed
     in
-    ( blocks, newSeed )
+    ( blocks, seed2 )
 
 
 exampleBlock : Seed -> ( Block, Seed )

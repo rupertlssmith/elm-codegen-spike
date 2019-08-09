@@ -74,7 +74,7 @@ update msg model =
         ( Seeded { seed }, ModelData val ) ->
             let
                 ( example, newSeed ) =
-                    AST.example 0 seed
+                    AST.example 10 seed
             in
             ( LoadedModel { seed = seed, dataModel = example }
             , AST.pretty example |> codeOutPort
