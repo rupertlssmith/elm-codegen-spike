@@ -29,24 +29,21 @@ prettyToList _ =
 example : Int -> Seed -> ( AST, Seed )
 example count seed =
     let
-        exampleInner : Int -> Seed -> ( AST, Seed )
-        exampleInner innerCount innerSeed =
+        exampleInner : Int -> ( AST, Seed ) -> ( AST, Seed )
+        exampleInner innerCount ( acc, innerSeed ) =
             case innerCount of
                 0 ->
-                    ( [], innerSeed )
+                    ( acc, innerSeed )
 
                 c ->
                     let
                         ( bl, innerSeed2 ) =
                             exampleBlock innerSeed
-
-                        ( e, innerSeed3 ) =
-                            exampleInner (innerCount - 1) innerSeed2
                     in
-                    ( bl :: e, innerSeed3 )
+                    exampleInner (innerCount - 1) ( bl :: acc, innerSeed2 )
 
         ( blocks, seed2 ) =
-            exampleInner count seed
+            exampleInner count ( [], seed )
     in
     ( blocks, seed2 )
 
